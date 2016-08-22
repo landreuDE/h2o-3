@@ -34,8 +34,8 @@ def hdfs_orc_parser():
 
         # make sure orc multi-file and single big file create same H2O frame
         assert pyunit_utils.compare_frames(multi_file_orc , multi_file_csv, numElements2Compare, tol_time,
-                                           tol_numeric,True), "H2O frame parsed from multiple orc and single orc " \
-                                                              "files are different!"
+                                           tol_numeric, strict=True), "H2O frame parsed from multiple orc and " \
+                                                                      "single orc files are different!"
     else:
         raise EnvironmentError
 

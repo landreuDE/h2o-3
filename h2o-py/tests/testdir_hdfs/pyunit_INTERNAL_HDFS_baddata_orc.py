@@ -21,18 +21,21 @@ def hdfs_orc_parser():
 
         hdfs_orc_file = "/datasets/orc_parser/orc/TestOrcFile.testStringAndBinaryStatistics.orc"
         url_orc = "hdfs://{0}{1}".format(hdfs_name_node, hdfs_orc_file)
-        assert pyunit_utils.expect_warnings(url_orc, "UserWarning:", "Skipping field:", 1),\
-            "Expect warnings from orc parser for file "+url_orc+"!"
+        assert pyunit_utils.expect_warnings(url_orc, warn_phrase="UserWarning:",
+                                            warn_string_of_interest="Skipping field:", in_hdfs=True,
+                                            number_of_times=1), "Expect warnings from orc parser for file "+url_orc+"!"
 
         hdfs_orc_file = "/datasets/orc_parser/orc/TestOrcFile.emptyFile.orc"
         url_orc = "hdfs://{0}{1}".format(hdfs_name_node, hdfs_orc_file)
-        assert pyunit_utils.expect_warnings(url_orc, "UserWarning:", "Skipping field:", 1), \
-            "Expect warnings from orc parser for file "+url_orc+"!"
+        assert pyunit_utils.expect_warnings(url_orc, warn_phrase="UserWarning:",
+                                            warn_string_of_interest="Skipping field:", in_hdfs=True,
+                                            number_of_times=1), "Expect warnings from orc parser for file "+url_orc+"!"
 
         hdfs_orc_file = "/datasets/orc_parser/orc/nulls-at-end-snappy.orc"
         url_orc = "hdfs://{0}{1}".format(hdfs_name_node, hdfs_orc_file)
-        assert pyunit_utils.expect_warnings(url_orc, "UserWarning:", "Skipping field:", 1), \
-            "Expect warnings from orc parser for file "+url_orc+"!"
+        assert pyunit_utils.expect_warnings(url_orc, warn_phrase="UserWarning:",
+                                            warn_string_of_interest="Skipping field:", in_hdfs=True,
+                                            number_of_times=1), "Expect warnings from orc parser for file "+url_orc+"!"
 
     else:
         raise EnvironmentError

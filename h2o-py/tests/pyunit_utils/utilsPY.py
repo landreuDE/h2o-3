@@ -2660,7 +2660,7 @@ def compareOneNumericColumn(frame1, frame2, col_ind, rows, tolerance, numElement
 
 import warnings
 
-def expect_warnings(filewithpath, warn_phrase="warn", warn_string_of_interest="warn", number_of_times=1):
+def expect_warnings(filewithpath, warn_phrase="warn", warn_string_of_interest="warn", number_of_times=1, in_hdfs=False):
     """
             This function will execute a command to run and analyze the print outs of
     running the command.  The goal here is to capture any warnings that we may expect
@@ -2677,8 +2677,12 @@ def expect_warnings(filewithpath, warn_phrase="warn", warn_string_of_interest="w
 
     buffer = StringIO()     # redirect warning messages to string buffer for later analysis
     sys.stderr = buffer
+    frame = None
 
-    frame = h2o.import_file(path=locate(filewithpath))
+    if in_hdfs:
+        frame = h2o.import_file(filewithpath)
+    else:
+        frame = h2o.import_file(path=locate(filewithpath))
 
     sys.stderr = sys.__stderr__     # redirect it back to stdout.
     try:        # for python 2.7
