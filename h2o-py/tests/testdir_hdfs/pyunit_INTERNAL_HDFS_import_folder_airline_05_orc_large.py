@@ -33,7 +33,7 @@ def hdfs_orc_parser():
         csv_type_dict = multi_file_csv.types
 
         multi_file_csv.summary()
-        csv_summary = h2o.frame(url_csv.frame_id)["frames"][0]["columns"]
+        csv_summary = h2o.frame(multi_file_csv.frame_id)["frames"][0]["columns"]
 
         col_ind_name = dict()
         # change column types from real to enum according to multi_file_csv column types
