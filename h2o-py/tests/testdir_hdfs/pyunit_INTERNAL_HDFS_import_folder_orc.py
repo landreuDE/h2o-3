@@ -22,22 +22,30 @@ def hdfs_orc_parser():
         tol_numeric = 1e-5          # tolerance for comparing other numeric fields
         numElements2Compare = 0   # choose number of elements per column to compare.  Save test time.
 
-        hdfs_csv_file = "/datasets/orc_parser/synthetic_perfect_separation_csv"
+        hdfs_csv_file1 = "datasets/orc_parser/csv/balunbal.csv"
+        url_csv1 = "hdfs://{0}{1}".format(hdfs_name_node, hdfs_csv_file1)
+        multi_file_csv1 = h2o.import_file(url_csv1)
+
+        hdfs_csv_file2 = "datasets/orc_parser/csv/unbalbal.csv"
+        url_csv2 = "hdfs://{0}{1}".format(hdfs_name_node, hdfs_csv_file2)
+        multi_file_csv2 = h2o.import_file(url_csv2)
+
         hdfs_orc_file = "/datasets/orc_parser/synthetic_perfect_separation_orc"
 
         url_orc = "hdfs://{0}{1}".format(hdfs_name_node, hdfs_orc_file)
-        url_csv = "hdfs://{0}{1}".format(hdfs_name_node, hdfs_csv_file)
-
-        print("Import csv file {0}".format(url_csv))
-        multi_file_csv = h2o.import_file(url_csv)
-        print("Import orc file {0}".format(url_orc))
         multi_file_orc = h2o.import_file(url_orc)
 
-        print("performing comparsions of the two frames.")
         # make sure orc multi-file and single big file create same H2O frame
-        assert pyunit_utils.compare_frames(multi_file_orc , multi_file_csv, numElements2Compare, tol_time=tol_time,
-                                           tol_numeric=tol_numeric, strict=True), "H2O frame parsed from multiple orc" \
-                                                                                  " and single orc files are different!"
+        try:
+            assert pyunit_utils.compare_frames(multi_file_orc , multi_file_csv1, numElements2Compare, tol_time=tol_time,
+                                               tol_numeric=tol_numeric, strict=True), "H2O frame parsed from multiple" \
+                                                                                      " orc and single orc files are" \
+                                                                                      " different!"
+        except:
+            assert pyunit_utils.compare_frames(multi_file_orc , multi_file_csv2, numElements2Compare, tol_time=tol_time,
+                                               tol_numeric=tol_numeric, strict=True), "H2O frame parsed from multiple" \
+                                                                                      " orc and single orc files are" \
+                                                                                      " different!"
     else:
         raise EnvironmentError
 
