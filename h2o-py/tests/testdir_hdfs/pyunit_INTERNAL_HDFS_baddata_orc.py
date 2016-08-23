@@ -37,7 +37,7 @@ def hdfs_orc_parser():
         url_orc = "hdfs://{0}{1}".format(hdfs_name_node, hdfs_orc_file)
         print("Parsing the orc file {0}".format(url_orc))
         assert pyunit_utils.expect_warnings(url_orc, warn_phrase="UserWarning:",
-                                            warn_string_of_interest="Skipping field:", in_hdfs=True,
+                                            warn_string_of_interest="Long.MIN_VALUE:", in_hdfs=True,
                                             number_of_times=1), "Expect warnings from orc parser for file "+url_orc+"!"
 
     else:
