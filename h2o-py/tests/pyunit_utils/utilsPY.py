@@ -2688,11 +2688,14 @@ def expect_warnings(filewithpath, warn_phrase="warn", warn_string_of_interest="w
     try:        # for python 2.7
         if len(buffer.buflist) > 0:
             for index in range(len(buffer.buflist)):
+                print("*** captured warning message: {0}".format(buffer.buflist[index]))
                 if (warn_phrase in buffer.buflist[index]) and (warn_string_of_interest in buffer.buflist[index]):
                     number_warngings = number_warngings+1
+
+        number_of_times = 1
     except:     # for python 3.
         warns = buffer.getvalue()
-
+        print("*** captured warning message: {0}".format(warns))
         if (warn_phrase in warns) and (warn_string_of_interest in warns):
             number_warngings = number_warngings+1
 
