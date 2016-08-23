@@ -22,11 +22,11 @@ def hdfs_orc_parser():
         tol_numeric = 1e-5          # tolerance for comparing other numeric fields
         numElements2Compare = 0   # choose number of elements per column to compare.  Save test time.
 
-        hdfs_csv_file1 = "datasets/orc_parser/csv/balunbal.csv"
+        hdfs_csv_file1 = "/datasets/orc_parser/csv/balunbal.csv"
         url_csv1 = "hdfs://{0}{1}".format(hdfs_name_node, hdfs_csv_file1)
         multi_file_csv1 = h2o.import_file(url_csv1)
 
-        hdfs_csv_file2 = "datasets/orc_parser/csv/unbalbal.csv"
+        hdfs_csv_file2 = "/datasets/orc_parser/csv/unbalbal.csv"
         url_csv2 = "hdfs://{0}{1}".format(hdfs_name_node, hdfs_csv_file2)
         multi_file_csv2 = h2o.import_file(url_csv2)
 
