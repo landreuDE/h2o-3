@@ -2791,11 +2791,14 @@ def cannaryHDFSTest(hdfs_name_node, file_name):
 
     try:
         multi_file_orc = h2o.import_file(url_orc)
-        return True
+        return False
     except Exception:
         print("Error exception is {0}".format(Exception))
-    
-        return False
+
+        if "Your hive-exec version is too old" in Exception:
+            return True
+        else:
+            return False
 
 
 
