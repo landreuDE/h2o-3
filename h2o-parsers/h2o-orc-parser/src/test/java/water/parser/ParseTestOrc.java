@@ -1,5 +1,9 @@
 package water.parser;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hive.ql.io.orc.OrcFile;
+import org.apache.hadoop.hive.ql.io.orc.Reader;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,6 +19,7 @@ import water.util.Log;
 
 import static org.junit.Assert.assertEquals;
 import static water.parser.OrcTestUtils.compareH2OFrame;
+import static water.parser.OrcTestUtils.compareOrcAndH2OFrame;
 
 /**
  * Test suite for orc parser.
@@ -74,7 +79,7 @@ public class ParseTestOrc extends TestUtil {
     @BeforeClass
     static public void _preconditionJavaVersion() { // NOTE: the `_` force execution of this check after setup
         // Does not run test on Java6 since we are running on Hadoop lib
-        Assume.assumeTrue("Java6 is not supported", System.getProperty("java.version", "NA").startsWith("1.6"));
+        Assume.assumeTrue("Java6 is not supported", !System.getProperty("java.version", "NA").startsWith("1.6"));
     }
 
     @Test
@@ -116,21 +121,9 @@ public class ParseTestOrc extends TestUtil {
             File f = find_test_file_static(fileName);
 
             if (f != null && f.exists()) {
-                org.apache.hadoop.conf.Configuration conf = new org.apache.hadoop.conf.Configuration();
-                org.apache.hadoop.fs.Path p = new org.apache.hadoop.fs.Path(f.toString());
                 try {
-                    org.apache.hadoop.hive.ql.io.orc.Reader orcFileReader =
-                        org.apache.hadoop.hive.ql.io.orc.OrcFile.createReader(p,
-                                                                              org.apache.hadoop.hive.ql.io.orc.OrcFile.readerOptions(conf));
-                    Frame h2oFrame = parse_test_file(fileName);     // read one orc file and build a H2O frame
-
-                    numberWrong += compareH2OFrame(fileName, failedFiles, h2oFrame, orcFileReader);
-
-                    if (h2oFrame != null) // delete frame after done.
-                        h2oFrame.delete();
-
+                    numberWrong += compareOrcAndH2OFrame(fileName, f, failedFiles);
                     totalFilesTested++;
-
                 } catch (IOException e) {
                     e.printStackTrace();
                     failedFiles.add(fileName);
