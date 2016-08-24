@@ -1,6 +1,7 @@
 package water.parser;
 
 
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import water.TestUtil;
@@ -35,6 +36,12 @@ public class ParseTestORCCSV extends TestUtil {
             "smalldata/parser/orc/hexdev_29.orc"};
 
     private Boolean[] forceColumnTypes = {false, false, false, true, true, true};
+
+    @BeforeClass
+    static public void _preconditionJavaVersion() { // NOTE: the `_` force execution of this check after setup
+        // Does not run test on Java6 since we are running on Hadoop lib
+        Assume.assumeTrue("Java6 is not supported", !System.getProperty("java.version", "NA").startsWith("1.6"));
+    }
 
     @BeforeClass
     static public void setup() { TestUtil.stall_till_cloudsize(5); }
