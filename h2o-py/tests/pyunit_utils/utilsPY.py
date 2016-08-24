@@ -2776,3 +2776,26 @@ def compare_frame_summary(frame1_summary, frame2_summary, compareNames=False, co
                     assert val1 == val2, "failed column summary comparison for column {0} and summary type " \
                                          "{1}, frame 1 value is {2}, frame 2 value is " \
                                          "{3}".format(col_index, str(key_val), val1, val2)
+
+
+def cannaryHDFSTest(hdfs_name_node, file_name):
+    """
+    This function is written to detect if the hive-exec version is too old.  It will return
+    True if it is too old and false otherwise.
+
+    :param hdfs_name_node:
+    :param file_name:
+    :return:
+    """
+    url_orc = "hdfs://{0}{1}".format(hdfs_name_node, file_name)
+
+    try:
+        multi_file_orc = h2o.import_file(url_orc)
+        return True
+    except Exception:
+        print("Error exception is {0}".format(Exception))
+    
+        return False
+
+
+
