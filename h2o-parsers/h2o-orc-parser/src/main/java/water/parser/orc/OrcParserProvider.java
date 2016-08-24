@@ -15,7 +15,6 @@ import water.parser.*;
 import water.persist.PersistHdfs;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import static water.fvec.FileVec.getPathForKey;
@@ -43,6 +42,8 @@ public class OrcParserProvider extends ParserProvider {
   public ParseSetup guessSetup(ByteVec bv, byte [] bits, byte sep, int ncols, boolean singleQuotes,
                                int checkHeader, String[] columnNames, byte[] columnTypes,
                                String[][] domains, String[][] naStrings) {
+    if (!OrcParser.checkHiveVersion())
+      throw new UnsupportedOperationException("Your Hive-Exec version is too old.  Your Orc files will not be parsed.");
     if(bv instanceof FileVec)
       return readSetup((FileVec)bv, columnNames, columnTypes);
     throw new UnsupportedOperationException("ORC only works on Files");
@@ -128,6 +129,11 @@ public class OrcParserProvider extends ParserProvider {
   @Override
   public ParseSetup setupLocal(Vec v, ParseSetup setup){
     if(!(v instanceof FileVec)) throw H2O.unimpl("ORC only implemented for HDFS / NFS files");
+
+    // check hive-exec version as well here.  Throw an error and do not proceed
+    if (!OrcParser.checkHiveVersion())
+      throw new UnsupportedOperationException("Your Hive-Exec version is too old.  Your Orc files will not be parsed.");
+
     try {
       ((OrcParser.OrcParseSetup)setup).setOrcFileReader(getReader((FileVec)v));
 

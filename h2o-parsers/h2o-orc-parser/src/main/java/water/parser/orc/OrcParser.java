@@ -61,6 +61,23 @@ public class OrcParser extends Parser {
     this.orcFileReader = ((OrcParser.OrcParseSetup) setup).orcFileReader;
   }
 
+  /**
+   * Note that the different Hive versions have different Decimal support.  In earlier
+   * versions, they have used Decimal128[] as our DecimalColumnVector which do not
+   * have the vector field.  We are going to use this fact to warn users about their
+   * old hadoop/Hive-exec version.
+   *
+   * @return boolean: true if too old and false otherwise.
+   */
+  public static boolean checkHiveVersion() {
+    try {
+      DecimalColumnVector.class.getField("vector");
+      return true; // is supported
+    } catch (NoSuchFieldException e) {
+      return false; // is not supported
+    }
+  }
+
   private transient int _cidx;
 
   private transient HashMap<Integer,HashMap<Number,byte[]>> _toStringMaps = new HashMap<>();
